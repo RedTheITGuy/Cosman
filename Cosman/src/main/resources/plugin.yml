@@ -1,0 +1,7 @@
+name: Cosman
+version: 0.0
+description: "A Minecraft cosmetic manager plugin using LuckPerms."
+main: me.RedTheITGuy.Cosman.Main
+api-version: 1.16
+author: Red_the_IT_Guy
+depend: [LuckPerms]
