@@ -1,7 +1,20 @@
 name: Cosman
-version: 0.1
+version: 0.2
 description: "A Minecraft cosmetic manager plugin using LuckPerms."
 main: me.RedTheITGuy.Cosman.Main
 api-version: 1.16
 author: Red_the_IT_Guy
 depend: [LuckPerms]
+commands:
+  nick:
+    description: Nick yourself or another player
+    usage: "/nick [[player] <name>]"
+    permission: cosman.nick
+
+permissions:
+  cosman.nick:
+    description: Allows a player to use the /nick command and nick themself
+    default: true
+  cosman.nick.others:
+    description: Allows a player to nick other people
+    default: op

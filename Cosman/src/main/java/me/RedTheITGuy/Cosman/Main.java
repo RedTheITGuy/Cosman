@@ -8,5 +8,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		// Registers the event listener
 		Bukkit.getServer().getPluginManager().registerEvents(new EventListener(), this);
+		// Registers the commands
+		this.getCommand("nick").setExecutor(new CommandNick());
 	}
 }

@@ -41,7 +41,14 @@ public class EventListener implements Listener {
 		
 		// Gets the name changer class
 		NameChanger nameChanger = new NameChanger();
-		// Changes the player's name
-		nameChanger.ChangeName(player, playerNick);
+		// Runs if the player has the permission to nick themself
+		if (player.hasPermission("cosman.nick")) {
+			// Changes the player's name
+			nameChanger.ChangeName(player, playerNick);
+		}
+		else {
+			// Resets the nickname
+			nameChanger.ResetName(player);
+		}
 	}
 }
