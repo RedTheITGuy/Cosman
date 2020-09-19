@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.RedTheITGuy.Cosman</groupId>
   <artifactId>Cosman</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
   <name>Cosman</name>
   <description>A Minecraft cosmetic manager plugin using LuckPerms.</description>
   

@@ -16,7 +16,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class NameChanger {
 	public void ChangeName(Player player, String name) {
 		// Formats the name correctly
-		name = "~" + ChatColor.translateAlternateColorCodes('&', name) + ChatColor.RESET;
+		name = "~" + ChatColor.translateAlternateColorCodes('&',name) + ChatColor.RESET;
 		// Sets the player's display name
 		player.setDisplayName(name);
 		// Sets the player's name for their name tag and for death messages, etc.
@@ -42,9 +42,9 @@ public class NameChanger {
 	
 	public int SetName(Player player, String name) {
 		// Stores the name with the colour striped
-		String nameNoColour = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', name));
+		String nameNoColour = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&',name));
 		// Exits if the name is invalid
-		if (nameNoColour.isEmpty() || nameNoColour.length() < 3 || nameNoColour.length() > 16 || nameNoColour.matches("\\W")) return 1;
+		if (nameNoColour.isEmpty() || nameNoColour.length() < 3 || nameNoColour.length() > 16 || !nameNoColour.matches("[\\w]*")) return 1;
 		
 		// Gets the provider for LuckPerms
 		RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -64,11 +64,25 @@ public class NameChanger {
 		if (!player.isOnline()) return 3;
 		// Loads the player data from LuckPerms
 		User user = api.getUserManager().getUser(player.getUniqueId());
+		// Gets the user's meta data
+		CachedMetaData metaData = user.getCachedData().getMetaData(api.getContextManager().getQueryOptions(player));
+		
+		// Tries to get the player's nick
+		String oldNick = metaData.getMetaValue("nick");
+		// Runs if the player has a nick
+		if (oldNick != null) {
+			// Builds the node for editing the meta
+			MetaNode nodeToRemove = MetaNode.builder("nick", oldNick).build();
+			// Clears the user's nick metadata
+			Bukkit.getLogger().info("Node Removal:" + user.data().remove(nodeToRemove).toString());
+		}
 		
 		// Builds the node for editing the meta
 		MetaNode node = MetaNode.builder("nick", name).build();
 		// Sets the players metadata
-		user.data().add(node);
+		Bukkit.getLogger().info("Node Addition:" + user.data().add(node).toString());
+		// Saves the changes
+		api.getUserManager().saveUser(user);
 		
 		// Changes the players name
 		ChangeName(player, name);
@@ -82,6 +96,39 @@ public class NameChanger {
 		player.setDisplayName(player.getName());
 		// Resets the player's list name
 		player.setPlayerListName(null);
+		
+		// Gets the provider for LuckPerms
+		RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+		// Creates the variable to store the API
+		LuckPerms api = null;
+		// Gets the LuckPerms API is the provider was retrieved
+		if (provider != null) api = provider.getProvider();
+		// Runs if the API is still null
+		if (api == null) {
+			// Tells the console an error as occurred
+			Bukkit.getLogger().warning("Could not load the LuckPerms API.");
+			// Exits the method
+			return;
+		}
+		
+		// Exits if the player is offline
+		if (!player.isOnline()) return;
+		// Loads the player data from LuckPerms
+		User user = api.getUserManager().getUser(player.getUniqueId());
+		// Gets the user's meta data
+		CachedMetaData metaData = user.getCachedData().getMetaData(api.getContextManager().getQueryOptions(player));
+		
+		// Tries to get the player's nick
+		String oldNick = metaData.getMetaValue("nick");
+		// Runs if the player has a nick
+		if (oldNick != null) {
+			// Builds the node for editing the meta
+			MetaNode nodeToRemove = MetaNode.builder("nick", oldNick).build();
+			// Clears the user's nick metadata
+			Bukkit.getLogger().info("Node Removal:" + user.data().remove(nodeToRemove).toString());
+			// Saves the changes
+			api.getUserManager().saveUser(user);
+		}
 		
 		// Tells the player there name has been reset
 		player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[NICK] " + ChatColor.RESET + "You're nickname has been reset.");

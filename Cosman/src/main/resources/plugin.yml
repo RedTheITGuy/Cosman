@@ -1,5 +1,5 @@
 name: Cosman
-version: 0.2
+version: 0.3
 description: "A Minecraft cosmetic manager plugin using LuckPerms."
 main: me.RedTheITGuy.Cosman.Main
 api-version: 1.16
